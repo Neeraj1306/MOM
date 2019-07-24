@@ -13,17 +13,7 @@ const cors = require("cors");
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
-const swaggerUi = require("swagger-ui-express");
-const yaml = require("yamljs");
 const routes_1 = require("./src/routes");
-const swagOptions = { explorer: false };
-const swaggerDocument = yaml.load('./swagger/swagger.yaml');
-if (process.env.NODE_ENV === 'production') {
-    swaggerDocument.host = 'https://sandip-shopping-app.herokuapp.com';
-}
-else {
-    swaggerDocument.host = `localhost:${process.env.PORT}`;
-}
 class App {
     constructor() {
         this.mongoUrl = process.env.MONGO_URL;
@@ -42,7 +32,6 @@ class App {
             this.express.use(cors());
             this.express.use(bodyParser.json());
             this.express.use(bodyParser.urlencoded({ extended: true }));
-            this.express.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swagOptions));
         });
     }
     setupRoutes() {

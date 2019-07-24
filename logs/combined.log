@@ -23,3 +23,54 @@
 {"message":"Server listening on : 3000 and swagger /docs","level":"info"}
 {"message":"Server listening on : 3000 and swagger /docs","level":"info"}
 {"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"MongooseError","level":"error"}
+{"message":"The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.","level":"error"}
+{"message":"MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.\n    at new MongooseError (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/error/mongooseError.js:10:11)\n    at NativeConnection.Connection.openUri (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/connection.js:503:11)\n    at Mongoose.connect (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/index.js:294:15)\n    at App.<anonymous> (/home/neosoft/Documents/MOM/App.ts:61:20)\n    at Generator.next (<anonymous>)\n    at /home/neosoft/Documents/MOM/App.ts:7:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/neosoft/Documents/MOM/App.ts:3:12)\n    at App.mongoSetup (/home/neosoft/Documents/MOM/App.ts:41:16)\n    at App.<anonymous> (/home/neosoft/Documents/MOM/App.ts:31:16)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/neosoft/Documents/MOM/App.ts:4:58)\n    at <anonymous>\n    at process._tickDomainCallback (internal/process/next_tick.js:228:7)\n    at Function.Module.runMain (module.js:695:11)\n    at Object.<anonymous> (/home/neosoft/Documents/MOM/node_modules/ts-node/src/bin.ts:157:12)\n    at Module._compile (module.js:652:30)\n    at Object.Module._extensions..js (module.js:663:10)\n    at Module.load (module.js:565:32)\n    at tryModuleLoad (module.js:505:12)\n    at Function.Module._load (module.js:497:3)\n    at Function.Module.runMain (module.js:693:10)","level":"error"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"MongoParseError","level":"error"}
+{"message":"Invalid connection string","level":"error"}
+{"message":"MongoParseError: Invalid connection string\n    at parseConnectionString (/home/neosoft/Documents/MOM/node_modules/mongodb-core/lib/uri_parser.js:505:21)\n    at connect (/home/neosoft/Documents/MOM/node_modules/mongodb/lib/operations/mongo_client_ops.js:195:3)\n    at connectOp (/home/neosoft/Documents/MOM/node_modules/mongodb/lib/operations/mongo_client_ops.js:284:3)\n    at executeOperation (/home/neosoft/Documents/MOM/node_modules/mongodb/lib/utils.js:416:24)\n    at MongoClient.connect (/home/neosoft/Documents/MOM/node_modules/mongodb/lib/mongo_client.js:175:10)\n    at Promise (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/connection.js:596:12)\n    at new Promise (<anonymous>)\n    at NativeConnection.Connection.openUri (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/connection.js:593:19)\n    at Mongoose.connect (/home/neosoft/Documents/MOM/node_modules/mongoose/lib/index.js:294:15)\n    at App.<anonymous> (/home/neosoft/Documents/MOM/App.ts:61:20)\n    at Generator.next (<anonymous>)\n    at /home/neosoft/Documents/MOM/App.ts:7:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/neosoft/Documents/MOM/App.ts:3:12)\n    at App.mongoSetup (/home/neosoft/Documents/MOM/App.ts:41:16)\n    at App.<anonymous> (/home/neosoft/Documents/MOM/App.ts:31:16)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/neosoft/Documents/MOM/App.ts:4:58)\n    at <anonymous>\n    at process._tickDomainCallback (internal/process/next_tick.js:228:7)\n    at Function.Module.runMain (module.js:695:11)\n    at Object.<anonymous> (/home/neosoft/Documents/MOM/node_modules/ts-node/src/bin.ts:157:12)","level":"error"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"id 5d384a32f9f09f40fdcf017d","level":"info"}
+{"message":"delete","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}
+{"message":"id 5d3853eeeb4e174678156b8a","level":"info"}
+{"message":"delete","level":"info"}
+{"message":"Server listening on : 3000 and swagger /docs","level":"info"}

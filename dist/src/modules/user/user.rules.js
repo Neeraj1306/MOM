@@ -39,10 +39,6 @@ exports.userRules = {
             .not()
             .isEmpty()
             .withMessage('Please enter first name'),
-        // check_1.check('gender')
-        //     .not()
-        //     .isEmpty()
-        //     .withMessage('Please select gender'),
     ],
     forUpdateUser: [
         check_1.check('email')

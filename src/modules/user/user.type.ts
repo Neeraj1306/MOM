@@ -7,7 +7,7 @@ export interface IUser extends Document {
   lastName?: string;
   created_date?: Date;
   token?: string;
-  role?: string; 
+  role?: string;
 }
 
 export interface IUserRequest {

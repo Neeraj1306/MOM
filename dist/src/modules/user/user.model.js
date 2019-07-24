@@ -19,12 +19,12 @@ exports.userSchema = new mongoose_1.Schema({
     last_name: {
         type: String,
     },
-    gender: {
-        type: String,
-        enum: ['Male', 'Female'],
-    },
     tmp_forgot_pass_code: {
         type: String,
+    },
+    role: {
+        type: String,
+        enum: ['User', 'ScrumMaster'],
     },
 }, {
     timestamps: true,
