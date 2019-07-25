@@ -74,7 +74,7 @@ export class UserLib {
     if (user !== null) {
       const isValidPass: boolean = await this.comparePassword(
         password,
-        user.password, 
+        user.password,
       );
       if (isValidPass) {
         const token: string = jwt.sign({ id: user._id }, process.env.SECRET, {

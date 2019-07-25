@@ -20,16 +20,16 @@ export const taskSchema: Schema = new Schema(
     comment: {
         type : String,
     },
-    currentDate:{
+    currentDate: {
       type : Date,
-    
+
     },
-    startDate:{
-      type : Date
+    startDate: {
+      type : Date,
     },
-    endDate:{
-      type : Date
-    }
+    endDate: {
+      type : Date,
+    },
 
   },
   {

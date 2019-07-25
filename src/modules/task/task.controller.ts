@@ -79,8 +79,6 @@ export class TaskController extends BaseController {
     }
   }
 
-  
-
   public async getTaskById(req: Request, res: Response): Promise<void> {
     try {
       const task: TaskLib = new TaskLib();
@@ -121,11 +119,11 @@ export class TaskController extends BaseController {
     const id: Types.ObjectId = req.params.id;
     try {
       const client: any = await new TaskLib().addClient(id, body);
-      console.log("client",client);
+      console.log('client',client);
       res.locals.data = client;
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
-      console.log("err",err)
+      console.log('err',err);
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, 'addClient');
     }
@@ -205,7 +203,7 @@ export class TaskController extends BaseController {
       // var client = tasks.docs.map(function(item) { return item["client"]; });
       // console.log("client",client);
       // var uniqueClient = client.filter(function(item, pos){
-      //   return client.indexOf(item)== pos; 
+      //   return client.indexOf(item)== pos;
       // });
       // console.log("uniqueClient",uniqueClient);
       res.locals.data = tasks.docs;

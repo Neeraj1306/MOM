@@ -79,7 +79,7 @@ export class AuthController extends BaseController {
       const email: string = req.body.email ? req.body.email : null;
       const tmpForgotPassCode: string = await utils.getToken();
       const userData: IUser = await user.getUserByEmail(email);
-      console.log("userData",userData)
+      console.log('userData', userData);
       await user.updateUser(userData._id, {
         tmp_forgot_pass_code: tmpForgotPassCode,
       });
@@ -95,7 +95,7 @@ export class AuthController extends BaseController {
         .sendEmail(options)
         .then()
         .catch();
-      
+
       ResponseHandler.JSONSUCCESS(req, res);
       await mailer.sendEmail(options);
     } catch (err) {
