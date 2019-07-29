@@ -1,67 +1,68 @@
-import { Application, Request, Response } from 'express';
-const { check } = require('express-validator');
-import { PaginateResult, Types } from 'mongoose';
-import { AuthHelper, ResponseHandler, Utils } from '../../helpers';
-import { logger } from '../../logger';
-import { BaseController } from '../BaseController';
-import { TaskLib } from './task.lib';
-import { taskRules } from './task.rules';
-import { ITask } from './task.type';
+import { Application, Request, Response } from "express";
+const { check } = require("express-validator");
+import { PaginateResult, Types } from "mongoose";
+import { AuthHelper, ResponseHandler, Utils } from "../../helpers";
+import { logger } from "../../logger";
+import { BaseController } from "../BaseController";
+import { TaskLib } from "./task.lib";
+import { taskRules } from "./task.rules";
+import { ITask } from "./task.type";
 
 /**
  * TaskController
  */
 export class TaskController extends BaseController {
-    constructor() {
-      super();
-      this.init();
-    }
+  constructor() {
+    super();
+    this.init();
+  }
 
-    public register(app: Application): void {
-        app.use('/api/tasks', this.router);
-    }
+  public register(app: Application): void {
+    app.use("/api/tasks", this.router);
+  }
 
-    public init(): void {
-        const authHelper: AuthHelper = new AuthHelper();
+  public init(): void {
+    const authHelper: AuthHelper = new AuthHelper();
 
-        this.router.get('/', authHelper.guard, this.getTasks);
-        this.router.get('/:id', authHelper.guard, this.getTaskById);
-        this.router.put(
-          '/:id',
-          authHelper.guard,
-          authHelper.validation,
-          this.updateTask,
-        );
-        this.router.put(
-          '/client/:id',
-          authHelper.guard,
-          taskRules.forAddClient,
-          authHelper.validation,
-          this.addClient,
-        );
-        this.router.put(
-          '/issue/:id',
-          authHelper.guard,
-          taskRules.forAddIssue,
-          authHelper.validation,
-          this.addIssue,
-        );
-        this.router.put(
-          '/help/:id',
-          authHelper.guard,
-          taskRules.forAddHelp,
-          authHelper.validation,
-          this.addHelp,
-        );
-        this.router.delete('/:id', this.deleteTask);
-        this.router.post(
-            '/',
-            authHelper.guard,
-            taskRules.forAddTask,
-            authHelper.validation,
-            this.addTask,
-        );
-      }
+    this.router.get("/", authHelper.guard, this.getTasks);
+    this.router.get("/client", authHelper.guard, this.getClients);
+    this.router.get("/:id", authHelper.guard, this.getTaskById);
+    this.router.put(
+      "/:id",
+      authHelper.guard,
+      authHelper.validation,
+      this.updateTask
+    );
+    this.router.put(
+      "/client/:id",
+      authHelper.guard,
+      taskRules.forAddClient,
+      authHelper.validation,
+      this.addClient
+    );
+    this.router.put(
+      "/issue/:id",
+      authHelper.guard,
+      taskRules.forAddIssue,
+      authHelper.validation,
+      this.addIssue
+    );
+    this.router.put(
+      "/help/:id",
+      authHelper.guard,
+      taskRules.forAddHelp,
+      authHelper.validation,
+      this.addHelp
+    );
+    this.router.delete("/:id", this.deleteTask);
+    this.router.post(
+      "/",
+      authHelper.guard,
+      taskRules.forAddTask,
+      authHelper.validation,
+      this.addTask
+    );
+  }
 
   /**
    * addTask
@@ -75,7 +76,7 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'addTask');
+      ResponseHandler.JSONERROR(req, res, "addTask");
     }
   }
 
@@ -87,7 +88,7 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'getTaskById');
+      ResponseHandler.JSONERROR(req, res, "getTaskById");
     }
   }
 
@@ -105,7 +106,7 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'updateTask');
+      ResponseHandler.JSONERROR(req, res, "updateTask");
     }
   }
 
@@ -119,13 +120,13 @@ export class TaskController extends BaseController {
     const id: Types.ObjectId = req.params.id;
     try {
       const client: any = await new TaskLib().addClient(id, body);
-      console.log('client',client);
+      // console.log('client', client);
       res.locals.data = client;
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
-      console.log('err',err);
+      // console.log('err', err);
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'addClient');
+      ResponseHandler.JSONERROR(req, res, "addClient");
     }
   }
 
@@ -143,7 +144,7 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'addClient');
+      ResponseHandler.JSONERROR(req, res, "addClient");
     }
   }
 
@@ -161,7 +162,7 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'addHelp');
+      ResponseHandler.JSONERROR(req, res, "addHelp");
     }
   }
 
@@ -174,14 +175,14 @@ export class TaskController extends BaseController {
     try {
       const user: TaskLib = new TaskLib();
       logger.info(`id ${req.params.id}`);
-      logger.info('delete');
+      logger.info("delete");
 
       const deletedTask: any = user.deleteUser(req.params.id);
       res.locals.data = deletedTask;
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'deletedTask');
+      ResponseHandler.JSONERROR(req, res, "deletedTask");
     }
   }
 
@@ -192,13 +193,14 @@ export class TaskController extends BaseController {
 
       const options: any = {
         page: req.query.page ? Number(req.query.page) : 1,
-        limit: req.query.limit ? Number(req.query.limit) : 2,
+        limit: req.query.limit ? Number(req.query.limit) : 2
       };
       const task: TaskLib = new TaskLib();
-      const tasks: PaginateResult<ITask> = await task.getTasks(
+      const tasks: PaginateResult<ITask> = await task
+        .getTasks
         // filters,
         // options,
-      );
+        ();
       // console.log("tasks",tasks.docs)
       // var client = tasks.docs.map(function(item) { return item["client"]; });
       // console.log("client",client);
@@ -211,8 +213,40 @@ export class TaskController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'getTasks');
+      ResponseHandler.JSONERROR(req, res, "getTasks");
     }
   }
 
+  public async getClients(req: Request, res: Response): Promise<void> {
+    try {
+      const utils: Utils = new Utils();
+      const filters: any = {};
+
+      const options: any = {
+        page: req.query.page ? Number(req.query.page) : 1,
+        limit: req.query.limit ? Number(req.query.limit) : 2
+      };
+      const task: TaskLib = new TaskLib();
+      const tasks: PaginateResult<ITask> = await task
+        .getTasks
+        // filters,
+        // options,
+        ();
+      // console.log("tasks",tasks.docs)
+      const client = tasks.docs.map(function(item) {
+        return item.client;
+      });
+      // console.log("client",client);
+      const uniqueClient = client.filter(function(item, pos) {
+        return client.indexOf(item) === pos;
+      });
+      // console.log("uniqueClient",uniqueClient);
+      res.locals.data = uniqueClient;
+      // res.locals.pagination = utils.getPaginateResponse(tasks);
+      ResponseHandler.JSONSUCCESS(req, res);
+    } catch (err) {
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "getClients");
+    }
+  }
 }

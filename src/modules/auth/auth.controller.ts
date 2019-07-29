@@ -1,14 +1,15 @@
-import { Application, Request, Response } from 'express';
-import { BaseController } from '../BaseController';
+const shortid = require("shortid");
+import { Application, Request, Response } from "express";
+import { BaseController } from "../BaseController";
 import {
   AuthHelper,
   EmailServer,
   ResponseHandler,
-  Utils,
-} from './../../helpers';
-import { UserLib } from './../user/user.lib';
-import { userRules } from './../user/user.rules';
-import { IUser } from './../user/user.type';
+  Utils
+} from "./../../helpers";
+import { UserLib } from "./../user/user.lib";
+import { userRules } from "./../user/user.rules";
+import { IUser } from "./../user/user.type";
 
 /**
  * AuthController
@@ -20,24 +21,29 @@ export class AuthController extends BaseController {
   }
 
   public register(app: Application): void {
-    app.use('/api/auth', this.router);
+    app.use("/api/auth", this.router);
   }
 
   public init(): void {
     const authHelper: AuthHelper = new AuthHelper();
     this.router.post(
-      '/sign-up',
+      "/sign-up",
       userRules.forSignUser,
       authHelper.validation,
-      this.signUp,
+      this.signUp
     );
     this.router.post(
-      '/login',
+      "/login",
       userRules.forSignIn,
       authHelper.validation,
-      this.login,
+      this.login
     );
-    this.router.post('/forgot-password', this.forgotPassword);
+    this.router.post("/forgot-password", this.forgotPassword);
+    this.router.post(
+      "/reset-password",
+      userRules.forResetPassword,
+      this.resetPassword
+    );
   }
 
   public async signUp(req: Request, res: Response): Promise<void> {
@@ -49,7 +55,7 @@ export class AuthController extends BaseController {
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'addUser');
+      ResponseHandler.JSONERROR(req, res, "addUser");
     }
   }
 
@@ -59,14 +65,14 @@ export class AuthController extends BaseController {
       const { email, password } = req.body;
       const loggedInUser: any = await user.loginUserAndCreateToken(
         email,
-        password,
+        password
       );
       res.locals.data = loggedInUser;
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.errorCode = 401;
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'login');
+      ResponseHandler.JSONERROR(req, res, "login");
     }
   }
 
@@ -79,17 +85,18 @@ export class AuthController extends BaseController {
       const email: string = req.body.email ? req.body.email : null;
       const tmpForgotPassCode: string = await utils.getToken();
       const userData: IUser = await user.getUserByEmail(email);
-      console.log('userData', userData);
+      // console.log('userData', userData);
       await user.updateUser(userData._id, {
         tmp_forgot_pass_code: tmpForgotPassCode,
+        tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expiration after 5 mins
       });
       const options: any = {
-        subject: 'Forgot Password',
-        templateName: 'password-reset',
+        subject: "Forgot Password",
+        templateName: "password-reset",
         to: userData.email,
         replace: {
-          code: '1234',
-        },
+          code: shortid.generate()
+        }
       };
       mailer
         .sendEmail(options)
@@ -100,17 +107,28 @@ export class AuthController extends BaseController {
       await mailer.sendEmail(options);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'forgotPassword');
+      ResponseHandler.JSONERROR(req, res, "forgotPassword");
     }
   }
 
   public async resetPassword(req: Request, res: Response): Promise<void> {
     try {
       const user: UserLib = new UserLib();
-      const mailer: EmailServer = new EmailServer();
+      // const mailer: EmailServer = new EmailServer();
+      const email: string = req.body.email ? req.body.email : null;
+      const userData: IUser = await user.getUserIfLinkNotExpired(email);
+      // if(!userData) {
+
+      // }
+      await user.updateUser(userData._id, {
+        // tmp_forgot_pass_code: tmpForgotPassCode,
+        tmp_forgot_pass_code_Expires: 1,
+        password: await user.generateHash(req.body.password)
+      });
+      ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
-      ResponseHandler.JSONERROR(req, res, 'forgotPassword');
+      ResponseHandler.JSONERROR(req, res, "resetPassword");
     }
   }
 }
