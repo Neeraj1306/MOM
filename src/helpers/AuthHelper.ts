@@ -18,14 +18,18 @@ export class AuthHelper {
       const errors: Result<{}> = validationResult(req);
       if (!errors.isEmpty()) {
         res.locals.data = errors.array();
+        // console.log("AuthHelper try",res.locals.data)
         throw new Error("ValidationError");
       } else {
         next();
       }
     } catch (err) {
-      res.locals.data.message = err.message;
+      res.locals.data.message = res.locals.data[0].msg
+        ? `${err.message}: ${res.locals.data[0].msg}`
+        : `${err.message}`;
       res.locals.details = err;
       res.locals.name = "ValidationError";
+      // console.log("AuthHelper catch", res.locals.data )
       ResponseHandler.JSONERROR(req, res, "validation");
     }
   }
@@ -68,6 +72,7 @@ export class AuthHelper {
       // console.log('token', token);
       if (token) {
         const auth: any = jwt.verify(token, process.env.SECRET);
+        console.log("role", auth.role.toLowerCase());
         if (auth.role.toLowerCase() === "scrummaster") {
           req.body.loggedinUserId = auth.id;
           // console.log("auth",auth)

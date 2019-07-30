@@ -24,7 +24,7 @@ export class TaskController extends BaseController {
   public init(): void {
     const authHelper: AuthHelper = new AuthHelper();
 
-    this.router.get("/", authHelper.guard, this.getTasks);
+    this.router.get("/", authHelper.adminGuard, this.getTasks);
     this.router.get("/client", authHelper.guard, this.getClients);
     this.router.get("/:id", authHelper.guard, this.getTaskById);
     this.router.put(
@@ -61,6 +61,13 @@ export class TaskController extends BaseController {
       taskRules.forAddTask,
       authHelper.validation,
       this.addTask
+    );
+    this.router.put(
+      "/adminComment/:id",
+      authHelper.adminGuard,
+      // taskRules.forAddHelp,
+      authHelper.validation,
+      this.addAdminComment
     );
   }
 
@@ -247,6 +254,24 @@ export class TaskController extends BaseController {
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getClients");
+    }
+  }
+
+  /**
+   * Add Help
+   * @param req
+   * @param res
+   */
+  public async addAdminComment(req: Request, res: Response): Promise<void> {
+    const body: ITask = req.body;
+    const id: Types.ObjectId = req.params.id;
+    try {
+      const adminComment: any = await new TaskLib().addAdminComment(id, body);
+      res.locals.data = adminComment;
+      ResponseHandler.JSONSUCCESS(req, res);
+    } catch (err) {
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "addAdminComment");
     }
   }
 }

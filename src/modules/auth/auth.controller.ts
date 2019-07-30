@@ -88,7 +88,7 @@ export class AuthController extends BaseController {
       // console.log('userData', userData);
       await user.updateUser(userData._id, {
         tmp_forgot_pass_code: tmpForgotPassCode,
-        tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expiration after 5 mins
+        tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expire after 5 mins
       });
       const options: any = {
         subject: "Forgot Password",

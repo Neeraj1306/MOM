@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 export interface ITask extends Document {
   _id: string;
   client?: string;
@@ -6,9 +6,11 @@ export interface ITask extends Document {
   issues?: string;
   currentDate?: string;
   help?: string;
+  comment?: string;
   startDate?: string;
   endDate?: string;
-//   created_date?: Date;
-//   token?: string;
-//   role?: string;
+  adminComment?: string;
+  //   created_date?: Date;
+  //   token?: string;
+  //   role?: string;
 }

@@ -36,6 +36,9 @@ export const taskSchema: Schema = new Schema(
     endDate: {
       type: Date
       // default: 'incomplete'
+    },
+    adminComment: {
+      type: String
     }
   },
   {
