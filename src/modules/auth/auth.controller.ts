@@ -85,26 +85,33 @@ export class AuthController extends BaseController {
       const email: string = req.body.email ? req.body.email : null;
       const tmpForgotPassCode: string = await utils.getToken();
       const userData: IUser = await user.getUserByEmail(email);
-      // console.log('userData', userData);
-      await user.updateUser(userData._id, {
-        tmp_forgot_pass_code: tmpForgotPassCode,
-        tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expire after 5 mins
-      });
-      const options: any = {
-        subject: "Forgot Password",
-        templateName: "password-reset",
-        to: userData.email,
-        replace: {
-          code: shortid.generate()
-        }
-      };
-      mailer
-        .sendEmail(options)
-        .then()
-        .catch();
+      console.log("userData", userData);
+      if (userData) {
+        await user.updateUser(userData._id, {
+          tmp_forgot_pass_code: tmpForgotPassCode,
+          tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expire after 5 mins
+        });
+        const options: any = {
+          subject: "Forgot Password",
+          templateName: "password-reset",
+          to: userData.email,
+          replace: {
+            code: shortid.generate()
+          }
+        };
+        mailer
+          .sendEmail(options)
+          .then()
+          .catch();
 
-      ResponseHandler.JSONSUCCESS(req, res);
-      await mailer.sendEmail(options);
+        ResponseHandler.JSONSUCCESS(req, res);
+        await mailer.sendEmail(options);
+      } else {
+        // console.log('else')
+        throw new Error("email is not valid");
+        // res.locals.data.message = 'enter correct email';
+        // ResponseHandler.JSONERROR(req, res, "forgotPassword");
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "forgotPassword");
@@ -117,15 +124,16 @@ export class AuthController extends BaseController {
       // const mailer: EmailServer = new EmailServer();
       const email: string = req.body.email ? req.body.email : null;
       const userData: IUser = await user.getUserIfLinkNotExpired(email);
-      // if(!userData) {
-
-      // }
-      await user.updateUser(userData._id, {
-        // tmp_forgot_pass_code: tmpForgotPassCode,
-        tmp_forgot_pass_code_Expires: 1,
-        password: await user.generateHash(req.body.password)
-      });
-      ResponseHandler.JSONSUCCESS(req, res);
+      if (userData) {
+        await user.updateUser(userData._id, {
+          // tmp_forgot_pass_code: tmpForgotPassCode,
+          tmp_forgot_pass_code_Expires: 1,
+          password: await user.generateHash(req.body.password)
+        });
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("link expired");
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "resetPassword");
