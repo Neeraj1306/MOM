@@ -16,6 +16,7 @@ export interface IStandardErrorResponse extends IStandardResponse {
   functionName?: string;
   data?: any;
   request?: any;
+  status?: any;
 }
 
 export interface IStandardSuccessResponse extends IStandardResponse {
@@ -24,6 +25,7 @@ export interface IStandardSuccessResponse extends IStandardResponse {
   pagination?: IPagination;
   fromTime?: string;
   toTime?: string;
+  status?: any;
 }
 export interface IInfo {
   userId: boolean;

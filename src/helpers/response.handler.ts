@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import * as HttpStatus from 'http-status-codes';
-import * as _ from 'lodash';
+import { Request, Response } from "express";
+import * as HttpStatus from "http-status-codes";
+import * as _ from "lodash";
 import {
   IStandardErrorResponse,
-  IStandardSuccessResponse,
-} from '../abstractions/ApiResponses';
-import { Messages } from '../constants';
+  IStandardSuccessResponse
+} from "../abstractions/ApiResponses";
+import { Messages } from "../constants";
 /**
  * response handler class
  */
@@ -17,6 +17,7 @@ export class ResponseHandler {
       data: res.locals.data,
       pagination: res.locals.pagination,
       message: res.locals.message || Messages.SUCCESS_RECEIVED,
+      status: HttpStatus.OK
     };
 
     res.status(HttpStatus.OK).jsonp(obj);
@@ -25,17 +26,17 @@ export class ResponseHandler {
   public static JSONERROR(req: Request, res: Response, apiName: string): void {
     let obj: IStandardErrorResponse;
     const showErrors: boolean =
-      ['production', 'prod'].indexOf(process.env.NODE_ENV) > 0 ? false : true;
+      ["production", "prod"].indexOf(process.env.NODE_ENV) > 0 ? false : true;
     const errors: any = res.locals.data;
     let details: any = [];
     let message: string = res.locals.data.message;
-    if (errors.name === 'ValidationError') {
+    if (errors.name === "ValidationError") {
       // mongoErr
       for (const key in res.locals.data.errors) {
         const value: any = res.locals.data.errors[key];
         details.push({
           msg: value.message,
-          param: value.path,
+          param: value.path
         });
       }
       message = res.locals.data._message;
@@ -53,6 +54,7 @@ export class ResponseHandler {
       success: false,
       details: details,
       message: message || Messages.SOMETHING_BAD,
+      status: errorCode
     };
     // error logs
     obj.functionName = apiName;
