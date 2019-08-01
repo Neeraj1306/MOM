@@ -18,8 +18,7 @@ export const taskSchema: Schema = new Schema(
     },
     help: {
       type: String,
-      enum: ["high", "low", "medium"],
-      default: "incomplete"
+      enum: ["high", "low", "medium"]
     },
     comment: {
       type: String,
