@@ -11,6 +11,8 @@ import { UserLib } from "./../user/user.lib";
 import { userRules } from "./../user/user.rules";
 import { IUser } from "./../user/user.type";
 
+var OTP: any = null;
+
 /**
  * AuthController
  */
@@ -42,6 +44,7 @@ export class AuthController extends BaseController {
     this.router.post(
       "/reset-password",
       userRules.forResetPassword,
+      authHelper.validation,
       this.resetPassword
     );
   }
@@ -78,6 +81,7 @@ export class AuthController extends BaseController {
 
   public async forgotPassword(req: Request, res: Response): Promise<void> {
     try {
+      OTP = shortid.generate();
       const user: UserLib = new UserLib();
       const mailer: EmailServer = new EmailServer();
       const utils: Utils = new Utils();
@@ -91,18 +95,19 @@ export class AuthController extends BaseController {
           tmp_forgot_pass_code: tmpForgotPassCode,
           tmp_forgot_pass_code_Expires: Date.now() + 300000 //link expire after 5 mins
         });
+        console.log("otp1", OTP);
         const options: any = {
           subject: "Forgot Password",
           templateName: "password-reset",
           to: userData.email,
           replace: {
-            code: shortid.generate()
+            code: OTP
           }
         };
-        mailer
-          .sendEmail(options)
-          .then()
-          .catch();
+        // mailer
+        //   .sendEmail(options)
+        //   .then()
+        //   .catch();
 
         ResponseHandler.JSONSUCCESS(req, res);
         await mailer.sendEmail(options);
@@ -120,17 +125,25 @@ export class AuthController extends BaseController {
 
   public async resetPassword(req: Request, res: Response): Promise<void> {
     try {
+      // console.log("otp2",OTP)
       const user: UserLib = new UserLib();
       // const mailer: EmailServer = new EmailServer();
       const email: string = req.body.email ? req.body.email : null;
+      console.log("5 min after", Date.now() + 300000);
+      console.log("now", Date.now());
       const userData: IUser = await user.getUserIfLinkNotExpired(email);
       if (userData) {
-        await user.updateUser(userData._id, {
-          // tmp_forgot_pass_code: tmpForgotPassCode,
-          tmp_forgot_pass_code_Expires: 1,
-          password: await user.generateHash(req.body.password)
-        });
-        ResponseHandler.JSONSUCCESS(req, res);
+        // console.log("otp3",OTP)
+        if (OTP == req.body.otp) {
+          await user.updateUser(userData._id, {
+            tmp_forgot_pass_code: null,
+            tmp_forgot_pass_code_Expires: null,
+            password: await user.generateHash(req.body.password)
+          });
+          ResponseHandler.JSONSUCCESS(req, res);
+        } else {
+          throw new Error("Incorrect OTP");
+        }
       } else {
         throw new Error("link expired");
       }

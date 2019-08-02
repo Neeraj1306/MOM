@@ -47,10 +47,10 @@ export class UserLib {
   }
 
   public async getUserIfLinkNotExpired(email: string): Promise<IUser> {
-    return userModel.findOne(
-      { email: email },
-      { tmp_forgot_pass_code_Expires: { $gt: new Date(Date.now()) } }
-    );
+    return userModel.findOne({
+      email: email,
+      tmp_forgot_pass_code_Expires: { $gt: new Date(Date.now()) }
+    });
   }
 
   /**
