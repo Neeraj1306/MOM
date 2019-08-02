@@ -1,6 +1,8 @@
 import { PaginateResult, Types } from "mongoose";
 import { taskModel } from "./task.model";
 import { ITask } from "./task.type";
+import { userModel } from "../user/user.model";
+import { IUser } from "modules/user/user.type";
 
 const isDelete: any = { isDelete: false };
 
@@ -33,6 +35,14 @@ export class TaskLib {
 
   public async addClient(id: Types.ObjectId, data: ITask): Promise<ITask> {
     return taskModel.findByIdAndUpdate(id, { $set: data }, { new: true });
+  }
+
+  public async addClientById(id: Types.ObjectId, data: string): Promise<IUser> {
+    return userModel.findByIdAndUpdate(
+      id,
+      { $push: { client: data } },
+      { new: true }
+    );
   }
 
   public async addIssue(id: Types.ObjectId, data: ITask): Promise<ITask> {

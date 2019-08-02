@@ -34,6 +34,9 @@ export const userSchema: Schema = new Schema(
       type: String,
       default: "User",
       enum: ["User", "ScrumMaster"]
+    },
+    client: {
+      type: []
     }
   },
   {

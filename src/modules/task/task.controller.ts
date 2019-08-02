@@ -125,8 +125,16 @@ export class TaskController extends BaseController {
   public async addClient(req: Request, res: Response): Promise<void> {
     const body: ITask = req.body;
     const id: Types.ObjectId = req.params.id;
+
     try {
+      console.log("1");
       const client: any = await new TaskLib().addClient(id, body);
+      console.log("2", req.body.loggedinUserId);
+      const clientById: any = await new TaskLib().addClientById(
+        req.body.loggedinUserId,
+        body.client
+      );
+      console.log("3");
       // console.log('client', client);
       res.locals.data = client;
       ResponseHandler.JSONSUCCESS(req, res);
