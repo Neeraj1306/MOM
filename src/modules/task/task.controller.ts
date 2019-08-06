@@ -79,7 +79,12 @@ export class TaskController extends BaseController {
   public async addTask(req: Request, res: Response): Promise<void> {
     try {
       const taskLib: TaskLib = new TaskLib();
-      res.locals.data = await taskLib.addTask(req.body);
+      const task = {
+        task: req.body.task,
+        currentDate: req.body.currentDate,
+        userId: req.body.loggedinUserId
+      };
+      res.locals.data = await taskLib.addTask(task);
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
@@ -90,9 +95,14 @@ export class TaskController extends BaseController {
   public async getTaskById(req: Request, res: Response): Promise<void> {
     try {
       const task: TaskLib = new TaskLib();
-      const taskDetails: ITask = await task.getTaskById(req.params.id);
-      res.locals.data = taskDetails;
-      ResponseHandler.JSONSUCCESS(req, res);
+      const taskDetails = await task.getTaskById(req.params.id);
+      console.log("taskDetails3", Object.keys(taskDetails).length !== 0);
+      if (taskDetails && Object.keys(taskDetails).length !== 0) {
+        res.locals.data = taskDetails;
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("No task found");
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getTaskById");
@@ -132,7 +142,7 @@ export class TaskController extends BaseController {
       console.log("2", req.body.loggedinUserId);
       const clientById: any = await new TaskLib().addClientById(
         req.body.loggedinUserId,
-        body.client
+        body.client.toLowerCase()
       );
       console.log("3");
       // console.log('client', client);
@@ -208,7 +218,7 @@ export class TaskController extends BaseController {
 
       const options: any = {
         page: req.query.page ? Number(req.query.page) : 1,
-        limit: req.query.limit ? Number(req.query.limit) : 2
+        limit: req.query.limit ? Number(req.query.limit) : 10
       };
       const task: TaskLib = new TaskLib();
       const tasks: PaginateResult<ITask> = await task

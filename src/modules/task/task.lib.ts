@@ -10,7 +10,7 @@ const isDelete: any = { isDelete: false };
  * ProductLib
  */
 export class TaskLib {
-  public async addTask(data: ITask): Promise<ITask> {
+  public async addTask(data: Object): Promise<ITask> {
     const taskObj: ITask = new taskModel(data);
 
     return taskObj.save();
@@ -22,8 +22,8 @@ export class TaskLib {
     return taskModel.paginate();
   }
 
-  public async getTaskById(id: string): Promise<ITask> {
-    return taskModel.findById(id);
+  public async getTaskById(id: string): Promise<Object> {
+    return taskModel.find({ userId: id });
   }
 
   public async findByIdAndUpdate(
@@ -40,7 +40,7 @@ export class TaskLib {
   public async addClientById(id: Types.ObjectId, data: string): Promise<IUser> {
     return userModel.findByIdAndUpdate(
       id,
-      { $push: { client: data } },
+      { $addToSet: { client: data } },
       { new: true }
     );
   }

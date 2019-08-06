@@ -19,7 +19,7 @@ export class UserController extends BaseController {
   public init(): void {
     const authHelper: AuthHelper = new AuthHelper();
 
-    this.router.get("/", authHelper.guard, this.getUsers);
+    this.router.get("/", authHelper.adminGuard, this.getUsers);
     this.router.get("/:id", authHelper.guard, this.getUserById);
     this.router.get("/client/:id", authHelper.guard, this.getUserClientById);
     this.router.put(
@@ -44,7 +44,7 @@ export class UserController extends BaseController {
 
       const options: any = {
         page: req.query.page ? Number(req.query.page) : 1,
-        limit: req.query.limit ? Number(req.query.limit) : 2
+        limit: req.query.limit ? Number(req.query.limit) : 10
       };
       const user: UserLib = new UserLib();
       const users: PaginateResult<IUser> = await user.getUsers(
@@ -65,8 +65,12 @@ export class UserController extends BaseController {
     try {
       const user: UserLib = new UserLib();
       const userDetails: IUser = await user.getUserById(req.params.id);
-      res.locals.data = userDetails;
-      ResponseHandler.JSONSUCCESS(req, res);
+      if (userDetails && Object.keys(userDetails).length !== 0) {
+        res.locals.data = userDetails;
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("no user found");
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getUserById");
@@ -77,9 +81,13 @@ export class UserController extends BaseController {
     try {
       const user: UserLib = new UserLib();
       const userDetails: IUser = await user.getUserById(req.params.id);
-      res.locals.data = userDetails.client;
       console.log(userDetails);
-      ResponseHandler.JSONSUCCESS(req, res);
+      if (userDetails && Object.keys(userDetails).length !== 0) {
+        res.locals.data = userDetails.client;
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("no client found");
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getUserClientById");

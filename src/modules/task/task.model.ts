@@ -4,6 +4,9 @@ import { ITask } from "./task.type";
 
 export const taskSchema: Schema = new Schema(
   {
+    userId: {
+      type: String
+    },
     client: {
       type: String,
       default: "incomplete"

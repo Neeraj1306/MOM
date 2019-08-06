@@ -1,6 +1,7 @@
 import { Document } from "mongoose";
 export interface ITask extends Document {
   _id: string;
+  userId: string;
   client?: string;
   task?: string;
   issues?: string;

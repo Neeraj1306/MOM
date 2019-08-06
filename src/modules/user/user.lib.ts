@@ -89,7 +89,7 @@ export class UserLib {
           { id: user._id, role: user.role },
           process.env.SECRET,
           {
-            expiresIn: "24h"
+            expiresIn: "365d"
           }
         );
         user.password = undefined;
