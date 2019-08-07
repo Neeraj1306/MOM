@@ -53,9 +53,21 @@ export class AuthController extends BaseController {
     try {
       const user: UserLib = new UserLib();
       const userData: IUser = req.body;
-      const userResult: IUser = await user.saveUser(userData);
-      res.locals.data = userResult;
-      ResponseHandler.JSONSUCCESS(req, res);
+      const password = req.body.password;
+      const email = req.body.email;
+      const userEmail: IUser = await user.getUserByEmail(email);
+      console.log("password", password);
+      if (userEmail) {
+        throw new Error("Email already exist");
+      } else {
+        const userResult: IUser = await user.saveUser(userData);
+        const loggedInUser: any = await user.loginUserAndCreateToken(
+          email,
+          password
+        );
+        res.locals.data = loggedInUser;
+        ResponseHandler.JSONSUCCESS(req, res);
+      }
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "addUser");
@@ -66,6 +78,7 @@ export class AuthController extends BaseController {
     try {
       const user: UserLib = new UserLib();
       const { email, password } = req.body;
+      console.log("password", password);
       const loggedInUser: any = await user.loginUserAndCreateToken(
         email,
         password
