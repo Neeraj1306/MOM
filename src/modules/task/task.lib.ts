@@ -22,8 +22,31 @@ export class TaskLib {
     return taskModel.paginate();
   }
 
+  public async getUserTasks(): // filters: any,
+  // options: any,
+  Promise<Object> {
+    return userModel.aggregate([
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "_id",
+          foreignField: "userId",
+          as: "agendas"
+        }
+      }
+    ]);
+  }
+
   public async getTaskById(id: string): Promise<Object> {
     return taskModel.find({ userId: id });
+  }
+
+  public async getTodayTaskById(id: string): Promise<Object> {
+    return taskModel.find({ userId: id, currentDate: { $gte: new Date() } });
+  }
+
+  public async getTodayTask(): Promise<Object> {
+    return taskModel.find({ currentDate: { $gte: new Date() } });
   }
 
   public async findByIdAndUpdate(

@@ -3,7 +3,7 @@ export interface IUser extends Document {
   _id: string;
   password?: string;
   email?: string;
-  firstName?: string;
+  name?: string;
   lastName?: string;
   created_date?: Date;
   token?: string;
@@ -14,7 +14,7 @@ export interface IUser extends Document {
 export interface IUserRequest {
   password?: string;
   email?: string;
-  firstName?: string;
+  name?: string;
   lastName?: string;
   created_date?: Date;
   token?: string;

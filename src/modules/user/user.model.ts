@@ -13,7 +13,7 @@ export const userSchema: Schema = new Schema(
       required: true,
       unique: true
     },
-    first_name: {
+    name: {
       required: "Enter a first name",
       type: String
     },

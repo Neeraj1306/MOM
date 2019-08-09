@@ -25,8 +25,11 @@ export class TaskController extends BaseController {
     const authHelper: AuthHelper = new AuthHelper();
 
     this.router.get("/", authHelper.adminGuard, this.getTasks);
+    this.router.get("/todaytask", authHelper.adminGuard, this.getTodayTasks);
     this.router.get("/client", authHelper.guard, this.getClients);
+    this.router.get("/todaytask/:id", authHelper.guard, this.getTodayTaskById);
     this.router.get("/:id", authHelper.guard, this.getTaskById);
+
     this.router.put(
       "/:id",
       authHelper.guard,
@@ -79,11 +82,14 @@ export class TaskController extends BaseController {
   public async addTask(req: Request, res: Response): Promise<void> {
     try {
       const taskLib: TaskLib = new TaskLib();
+      console.log("body", req.body);
       const task = {
         task: req.body.task,
         currentDate: req.body.currentDate,
-        userId: req.body.loggedinUserId
+        userId: req.body.loggedinUserId,
+        userName: req.body.userName
       };
+      console.log("task", task);
       res.locals.data = await taskLib.addTask(task);
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
@@ -104,6 +110,25 @@ export class TaskController extends BaseController {
         throw new Error("No task found");
       }
     } catch (err) {
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "getTaskById");
+    }
+  }
+
+  public async getTodayTaskById(req: Request, res: Response): Promise<void> {
+    try {
+      console.log("getTodayTaskById");
+      const task: TaskLib = new TaskLib();
+      const taskDetails = await task.getTodayTaskById(req.params.id);
+      console.log("taskDetails3", Object.keys(taskDetails));
+      if (taskDetails && Object.keys(taskDetails).length !== 0) {
+        res.locals.data = taskDetails;
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("No task found");
+      }
+    } catch (err) {
+      console.log("getTodayTaskById error");
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getTaskById");
     }
@@ -213,6 +238,7 @@ export class TaskController extends BaseController {
 
   public async getTasks(req: Request, res: Response): Promise<void> {
     try {
+      console.log("id", req.body.loggedinUserId);
       const utils: Utils = new Utils();
       const filters: any = {};
 
@@ -221,8 +247,8 @@ export class TaskController extends BaseController {
         limit: req.query.limit ? Number(req.query.limit) : 10
       };
       const task: TaskLib = new TaskLib();
-      const tasks: PaginateResult<ITask> = await task
-        .getTasks
+      const tasks = await task
+        .getUserTasks
         // filters,
         // options,
         ();
@@ -233,12 +259,38 @@ export class TaskController extends BaseController {
       //   return client.indexOf(item)== pos;
       // });
       // console.log("uniqueClient",uniqueClient);
-      res.locals.data = tasks.docs;
-      res.locals.pagination = utils.getPaginateResponse(tasks);
+      res.locals.data = tasks;
+      // res.locals.pagination = utils.getPaginateResponse(tasks);
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "getTasks");
+    }
+  }
+
+  public async getTodayTasks(req: Request, res: Response): Promise<void> {
+    try {
+      const utils: Utils = new Utils();
+      const filters: any = {};
+      const select: string = "-password";
+
+      const options: any = {
+        page: req.query.page ? Number(req.query.page) : 1,
+        limit: req.query.limit ? Number(req.query.limit) : 10
+      };
+      const task: TaskLib = new TaskLib();
+      const tasks = await task
+        .getTodayTask
+        // filters,
+        // select,
+        // options
+        ();
+      res.locals.data = tasks;
+      // res.locals.pagination = utils.getPaginateResponse(tasks);
+      ResponseHandler.JSONSUCCESS(req, res);
+    } catch (err) {
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "getTodayTasks");
     }
   }
 

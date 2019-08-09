@@ -78,7 +78,7 @@ export class UserLib {
   ): Promise<any> {
     let user: IUser = await this.getUserByEmail(email);
     user = JSON.parse(JSON.stringify(user));
-    // console.log("user",user)
+    console.log("user", user);
     if (user !== null) {
       const isValidPass: boolean = await this.comparePassword(
         password,
@@ -86,7 +86,7 @@ export class UserLib {
       );
       if (isValidPass) {
         const token: string = jwt.sign(
-          { id: user._id, role: user.role },
+          { id: user._id, role: user.role, userName: user.name },
           process.env.SECRET,
           {
             expiresIn: "365d"

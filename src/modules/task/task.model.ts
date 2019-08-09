@@ -7,6 +7,9 @@ export const taskSchema: Schema = new Schema(
     userId: {
       type: String
     },
+    userName: {
+      type: String
+    },
     client: {
       type: String,
       default: "incomplete"

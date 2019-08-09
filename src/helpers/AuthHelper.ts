@@ -46,7 +46,8 @@ export class AuthHelper {
         const auth: any = jwt.verify(token, process.env.SECRET);
         if (auth) {
           req.body.loggedinUserId = auth.id;
-          // console.log("auth",auth)
+          req.body.userName = auth.userName;
+          console.log("auth", auth);
           next();
         } else {
           throw new Error(Messages.INVALID_CREDENTIALS);
@@ -75,7 +76,8 @@ export class AuthHelper {
         console.log("role", auth.role.toLowerCase());
         if (auth.role.toLowerCase() === "scrummaster") {
           req.body.loggedinUserId = auth.id;
-          // console.log("auth",auth)
+          req.body.userName = auth.userName;
+          console.log("auth", auth);
           next();
         } else {
           throw new Error(Messages.UNAUTHORIZED_USER);

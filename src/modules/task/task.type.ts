@@ -11,6 +11,7 @@ export interface ITask extends Document {
   startDate?: string;
   endDate?: string;
   adminComment?: string;
+  userName?: string;
   //   created_date?: Date;
   //   token?: string;
   //   role?: string;

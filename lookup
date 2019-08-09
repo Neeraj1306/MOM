@@ -1,0 +1,25 @@
+userModel.aggregate([
+    {
+      $lookup:
+        {
+          from: "taskModel",
+          localField: "_id",
+          foreignField: "userId",
+          as: "agendas"
+        }
+   },
+   
+])
+
+db.artists.aggregate([
+    {
+      $lookup:
+        {
+          from: "musicians",
+          localField: "_id",
+          foreignField: "artist_id",
+          as: "band_members"
+        }
+   },
+   { $match : { artistname : "Rush" } }
+]).pretty()

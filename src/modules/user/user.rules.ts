@@ -42,7 +42,7 @@ export const userRules: any = {
       )
       .withMessage("Password and Confirm password are not same."),
 
-    check("first_name")
+    check("name")
       .not()
       .isEmpty()
       .withMessage("Please enter first name")
