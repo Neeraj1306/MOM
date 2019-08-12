@@ -7,6 +7,9 @@ import { BaseController } from "../BaseController";
 import { TaskLib } from "./task.lib";
 import { taskRules } from "./task.rules";
 import { ITask } from "./task.type";
+import { UserLib } from "./../user/user.lib";
+import { IUser } from "./../user/user.type";
+import { EmailServer } from "./../../helpers";
 
 /**
  * TaskController
@@ -28,7 +31,19 @@ export class TaskController extends BaseController {
     this.router.get("/todaytask", authHelper.adminGuard, this.getTodayTasks);
     this.router.get("/client", authHelper.guard, this.getClients);
     this.router.get("/todaytask/:id", authHelper.guard, this.getTodayTaskById);
+    this.router.get(
+      "/todaytaskbytaskid/:id",
+      authHelper.guard,
+      this.getTodayTaskByTaskId
+    );
     this.router.get("/:id", authHelper.guard, this.getTaskById);
+    this.router.post(
+      "/sendreport",
+      authHelper.guard,
+      // taskRules.forAddTask,
+      authHelper.validation,
+      this.sendReport
+    );
 
     this.router.put(
       "/:id",
@@ -120,6 +135,28 @@ export class TaskController extends BaseController {
       console.log("getTodayTaskById");
       const task: TaskLib = new TaskLib();
       const taskDetails = await task.getTodayTaskById(req.params.id);
+      console.log("taskDetails3", Object.keys(taskDetails));
+      if (taskDetails && Object.keys(taskDetails).length !== 0) {
+        res.locals.data = taskDetails;
+        ResponseHandler.JSONSUCCESS(req, res);
+      } else {
+        throw new Error("No task found");
+      }
+    } catch (err) {
+      console.log("getTodayTaskById error");
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "getTaskById");
+    }
+  }
+
+  public async getTodayTaskByTaskId(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      console.log("getTodayTaskByTaskId");
+      const task: TaskLib = new TaskLib();
+      const taskDetails = await task.getTodayTaskByTaskId(req.params.id);
       console.log("taskDetails3", Object.keys(taskDetails));
       if (taskDetails && Object.keys(taskDetails).length !== 0) {
         res.locals.data = taskDetails;
@@ -342,6 +379,49 @@ export class TaskController extends BaseController {
     } catch (err) {
       res.locals.data = err;
       ResponseHandler.JSONERROR(req, res, "addAdminComment");
+    }
+  }
+
+  public async sendReport(req: Request, res: Response): Promise<void> {
+    try {
+      const user: UserLib = new UserLib();
+      const mailer: EmailServer = new EmailServer();
+      const utils: Utils = new Utils();
+
+      const email: string = req.body.email ? req.body.email : null;
+      // const tmpForgotPassCode: string = await utils.getToken();
+      // const userData: IUser = await user.getUserByEmail(email);
+      // console.log("userData", userData);
+      // if (userData) {
+      console.log("sendReport1");
+      const options: any = {
+        subject: "Today Agenda",
+        templateName: "send-report",
+        to: "neeraj.kumar@neosofttech.com",
+        replace: {
+          // code: OTP
+          currentDate: req.body.currentDate,
+          name: req.body.name,
+          task: req.body.task,
+          help: req.body.help
+        }
+      };
+      // mailer
+      //   .sendEmail(options)
+      //   .then()
+      //   .catch();
+      await mailer.sendEmail(options);
+      ResponseHandler.JSONSUCCESS(req, res);
+
+      // } else {
+      // console.log('else')
+      // throw new Error("email is not valid");
+      // res.locals.data.message = 'enter correct email';
+      // ResponseHandler.JSONERROR(req, res, "forgotPassword");
+      // }
+    } catch (err) {
+      res.locals.data = err;
+      ResponseHandler.JSONERROR(req, res, "sendReport");
     }
   }
 }
