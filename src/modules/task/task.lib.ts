@@ -46,11 +46,16 @@ export class TaskLib {
   }
 
   public async getTodayTaskByTaskId(id: string): Promise<Object> {
-    return taskModel.find({ _id: id, currentDate: { $gte: new Date() } });
+    return taskModel.find({
+      _id: id,
+      createdAt: { $gte: new Date().setHours(0, 0, 0, 0) }
+    });
   }
 
   public async getTodayTask(): Promise<Object> {
-    return taskModel.find({ currentDate: { $gte: new Date() } });
+    return taskModel.find({
+      createdAt: { $gte: new Date().setHours(0, 0, 0, 0) }
+    });
   }
 
   public async findByIdAndUpdate(
