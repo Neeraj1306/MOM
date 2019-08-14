@@ -121,9 +121,9 @@ export class AuthController extends BaseController {
         //   .sendEmail(options)
         //   .then()
         //   .catch();
-
-        ResponseHandler.JSONSUCCESS(req, res);
         await mailer.sendEmail(options);
+        ResponseHandler.JSONSUCCESS(req, res);
+        // await mailer.sendEmail(options);
       } else {
         // console.log('else')
         throw new Error("email is not valid");
