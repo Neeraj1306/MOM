@@ -19,15 +19,18 @@ class EmailServer {
                 secure: Boolean(process.env.SECURE),
                 auth: {
                     user: process.env.EMAIL_USERNAME,
-                    pass: process.env.EMAIL_PASS,
-                },
+                    pass: process.env.EMAIL_PASS
+                }
             });
             const mailOptions = {
                 from: process.env.EMAIL_FROM,
                 to: options.to,
-                subject: options.subject,
+                subject: options.subject
             };
-            if (options.templateName) {
+            if (options.templateName == "password-reset") {
+                mailOptions.html = yield this.getTemplate(options.templateName, options.replace);
+            }
+            if (options.templateName == "send-report") {
                 mailOptions.html = yield this.getTemplate(options.templateName, options.replace);
             }
             const info = yield transporter.sendMail(mailOptions);

@@ -20,23 +20,24 @@ class UserController extends BaseController_1.BaseController {
     }
     init() {
         const authHelper = new helpers_1.AuthHelper();
-        this.router.get('/', authHelper.guard, this.getUsers);
-        this.router.get('/:id', authHelper.guard, this.getUserById);
-        this.router.put('/:id', authHelper.guard, user_rules_1.userRules.forUpdateUser, authHelper.validation, this.updateUser);
-        this.router.delete('/:id', this.deleteUser);
+        this.router.get("/", authHelper.adminGuard, this.getUsers);
+        this.router.get("/:id", authHelper.guard, this.getUserById);
+        this.router.get("/client/:id", authHelper.guard, this.getUserClientById);
+        this.router.put("/:id", authHelper.guard, user_rules_1.userRules.forUpdateUser, authHelper.validation, this.updateUser);
+        this.router.delete("/:id", this.deleteUser);
     }
     register(app) {
-        app.use('/api/users', this.router);
+        app.use("/api/users", this.router);
     }
     getUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const utils = new helpers_1.Utils();
                 const filters = {};
-                const select = '-password';
+                const select = "-password";
                 const options = {
                     page: req.query.page ? Number(req.query.page) : 1,
-                    limit: req.query.limit ? Number(req.query.limit) : 2,
+                    limit: req.query.limit ? Number(req.query.limit) : 10
                 };
                 const user = new user_lib_1.UserLib();
                 const users = yield user.getUsers(filters, select, options);
@@ -46,7 +47,7 @@ class UserController extends BaseController_1.BaseController {
             }
             catch (err) {
                 res.locals.data = err;
-                helpers_1.ResponseHandler.JSONERROR(req, res, 'getUsers');
+                helpers_1.ResponseHandler.JSONERROR(req, res, "getUsers");
             }
         });
     }
@@ -55,12 +56,37 @@ class UserController extends BaseController_1.BaseController {
             try {
                 const user = new user_lib_1.UserLib();
                 const userDetails = yield user.getUserById(req.params.id);
-                res.locals.data = userDetails;
-                helpers_1.ResponseHandler.JSONSUCCESS(req, res);
+                if (userDetails && Object.keys(userDetails).length !== 0) {
+                    res.locals.data = userDetails;
+                    helpers_1.ResponseHandler.JSONSUCCESS(req, res);
+                }
+                else {
+                    throw new Error("no user found");
+                }
             }
             catch (err) {
                 res.locals.data = err;
-                helpers_1.ResponseHandler.JSONERROR(req, res, 'getUserById');
+                helpers_1.ResponseHandler.JSONERROR(req, res, "getUserById");
+            }
+        });
+    }
+    getUserClientById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = new user_lib_1.UserLib();
+                const userDetails = yield user.getUserById(req.params.id);
+                console.log(userDetails);
+                if (userDetails && Object.keys(userDetails).length !== 0) {
+                    res.locals.data = userDetails.client;
+                    helpers_1.ResponseHandler.JSONSUCCESS(req, res);
+                }
+                else {
+                    throw new Error("no client found");
+                }
+            }
+            catch (err) {
+                res.locals.data = err;
+                helpers_1.ResponseHandler.JSONERROR(req, res, "getUserClientById");
             }
         });
     }
@@ -69,36 +95,36 @@ class UserController extends BaseController_1.BaseController {
             try {
                 const userId = req.params && req.params.id;
                 if (userId !== req.body.loggedinUserId) {
-                    throw new Error('You are not owner to update details');
+                    throw new Error("You are not owner to update details");
                 }
                 const userData = req.body;
                 delete userData.password;
                 const user = new user_lib_1.UserLib();
                 const updatedUserResult = yield user.updateUser(userId, userData);
-                logger_1.logger.info('user updated');
+                logger_1.logger.info("user updated");
                 res.locals.data = updatedUserResult;
                 helpers_1.ResponseHandler.JSONSUCCESS(req, res);
             }
             catch (err) {
                 res.locals.data = err;
-                helpers_1.ResponseHandler.JSONERROR(req, res, 'updateUser');
+                helpers_1.ResponseHandler.JSONERROR(req, res, "updateUser");
             }
         });
     }
     deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                throw new Error('Not Allowed now');
+                throw new Error("Not Allowed now");
                 const user = new user_lib_1.UserLib();
                 logger_1.logger.info(`id ${req.params.id}`);
-                logger_1.logger.info('delete');
+                logger_1.logger.info("delete");
                 const deletedUser = user.deleteUser(req.params.id);
                 res.locals.data = deletedUser;
                 helpers_1.ResponseHandler.JSONSUCCESS(req, res);
             }
             catch (err) {
                 res.locals.data = err;
-                helpers_1.ResponseHandler.JSONERROR(req, res, 'deleteUser');
+                helpers_1.ResponseHandler.JSONERROR(req, res, "deleteUser");
             }
         });
     }

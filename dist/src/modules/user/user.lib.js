@@ -42,7 +42,15 @@ class UserLib {
     }
     getUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            return user_model_1.userModel.findOne({ email: email }, '+password');
+            return user_model_1.userModel.findOne({ email: email }, "+password");
+        });
+    }
+    getUserIfLinkNotExpired(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return user_model_1.userModel.findOne({
+                email: email,
+                tmp_forgot_pass_code_Expires: { $gt: new Date(Date.now()) }
+            });
         });
     }
     updateUser(userId, userData) {
@@ -61,11 +69,12 @@ class UserLib {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield this.getUserByEmail(email);
             user = JSON.parse(JSON.stringify(user));
+            console.log("user", user);
             if (user !== null) {
                 const isValidPass = yield this.comparePassword(password, user.password);
                 if (isValidPass) {
-                    const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-                        expiresIn: '24h',
+                    const token = jwt.sign({ id: user._id, role: user.role, userName: user.name }, process.env.SECRET, {
+                        expiresIn: "365d"
                     });
                     user.password = undefined;
                     return { user, token };

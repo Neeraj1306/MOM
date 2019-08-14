@@ -20,17 +20,19 @@ class AuthHelper {
                 const errors = check_1.validationResult(req);
                 if (!errors.isEmpty()) {
                     res.locals.data = errors.array();
-                    throw new Error('ValidationError');
+                    throw new Error("ValidationError");
                 }
                 else {
                     next();
                 }
             }
             catch (err) {
-                res.locals.data.message = err.message;
+                res.locals.data.message = res.locals.data[0].msg
+                    ? `${err.message}: ${res.locals.data[0].msg}`
+                    : `${err.message}`;
                 res.locals.details = err;
-                res.locals.name = 'ValidationError';
-                response_handler_1.ResponseHandler.JSONERROR(req, res, 'validation');
+                res.locals.name = "ValidationError";
+                response_handler_1.ResponseHandler.JSONERROR(req, res, "validation");
             }
         });
     }
@@ -38,11 +40,12 @@ class AuthHelper {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const token = req.headers.authorization || req.query.token;
-                console.log("token", token);
                 if (token) {
                     const auth = jwt.verify(token, process.env.SECRET);
                     if (auth) {
                         req.body.loggedinUserId = auth.id;
+                        req.body.userName = auth.userName;
+                        console.log("auth", auth);
                         next();
                     }
                     else {
@@ -55,9 +58,38 @@ class AuthHelper {
             }
             catch (err) {
                 res.locals.data = err;
-                res.locals.message = 'AuthenticationError';
+                res.locals.message = "AuthenticationError";
                 res.locals.statusCode = HttpStatus.UNAUTHORIZED;
-                response_handler_1.ResponseHandler.JSONERROR(req, res, 'Authorization');
+                response_handler_1.ResponseHandler.JSONERROR(req, res, "Authorization");
+            }
+        });
+    }
+    adminGuard(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.headers.authorization || req.query.token;
+                if (token) {
+                    const auth = jwt.verify(token, process.env.SECRET);
+                    console.log("role", auth.role.toLowerCase());
+                    if (auth.role.toLowerCase() === "scrummaster") {
+                        req.body.loggedinUserId = auth.id;
+                        req.body.userName = auth.userName;
+                        console.log("auth", auth);
+                        next();
+                    }
+                    else {
+                        throw new Error(messages_1.Messages.UNAUTHORIZED_USER);
+                    }
+                }
+                else {
+                    throw new Error(messages_1.Messages.UNAUTHORIZED_USER);
+                }
+            }
+            catch (err) {
+                res.locals.data = err;
+                res.locals.message = "AuthenticationError";
+                res.locals.statusCode = HttpStatus.UNAUTHORIZED;
+                response_handler_1.ResponseHandler.JSONERROR(req, res, "admingGuard");
             }
         });
     }
