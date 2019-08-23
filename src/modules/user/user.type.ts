@@ -9,6 +9,7 @@ export interface IUser extends Document {
   token?: string;
   role?: string;
   client?: [];
+  todayBool?: boolean;
 }
 
 export interface IUserRequest {
@@ -21,4 +22,5 @@ export interface IUserRequest {
   tmp_forgot_pass_code?: string;
   role?: string;
   tmp_forgot_pass_code_Expires?: number;
+  todayBool?: boolean;
 }

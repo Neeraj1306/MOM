@@ -16,7 +16,6 @@
     "tslint:fix": "tslint --project tsconfig.json --fix",
     "precommit": "lint-staged"
   },
-  
   "lint-staged": {
     "{src,test}/**/*.ts*": [
       "prettier --write",
@@ -40,6 +39,7 @@
     "lodash": "^4.17.14",
     "mongoose": "^5.6.4",
     "mongoose-paginate": "5.0.3",
+    "node-cron": "^2.0.3",
     "nodemailer": "6.2.1",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",

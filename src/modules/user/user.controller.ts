@@ -6,6 +6,14 @@ import { logger } from "./../../logger";
 import { UserLib } from "./user.lib";
 import { userRules } from "./user.rules";
 import { IUser } from "./user.type";
+const cron = require("node-cron");
+const fs = require("fs");
+
+// schedule tasks to be run on the server
+cron.schedule("59 23 * * *", function() {
+  const user: UserLib = new UserLib();
+  user.updateUserTaskBoolean();
+});
 
 /**
  * UserController

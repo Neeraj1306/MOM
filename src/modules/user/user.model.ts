@@ -37,6 +37,10 @@ export const userSchema: Schema = new Schema(
     },
     client: {
       type: []
+    },
+    todayBool: {
+      type: Boolean,
+      default: true
     }
   },
   {

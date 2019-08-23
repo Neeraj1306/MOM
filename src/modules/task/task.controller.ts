@@ -106,6 +106,10 @@ export class TaskController extends BaseController {
       };
       console.log("task", task);
       res.locals.data = await taskLib.addTask(task);
+      const userData = await taskLib.updateTodayTaskBool(
+        req.body.loggedinUserId
+      );
+      console.log("userData", userData);
       ResponseHandler.JSONSUCCESS(req, res);
     } catch (err) {
       res.locals.data = err;

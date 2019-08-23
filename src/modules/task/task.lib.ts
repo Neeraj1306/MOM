@@ -68,6 +68,14 @@ export class TaskLib {
     return taskModel.findByIdAndUpdate(id, { $set: data }, { new: true });
   }
 
+  public async updateTodayTaskBool(id: Types.ObjectId): Promise<IUser> {
+    return userModel.findByIdAndUpdate(
+      id,
+      { $set: { todayBool: false } },
+      { new: true }
+    );
+  }
+
   public async addClient(id: Types.ObjectId, data: ITask): Promise<ITask> {
     return taskModel.findByIdAndUpdate(id, { $set: data }, { new: true });
   }

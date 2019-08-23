@@ -68,6 +68,10 @@ export class UserLib {
     return user.save();
   }
 
+  public async updateUserTaskBoolean(): Promise<any> {
+    return userModel.updateMany({}, { $set: { todayBool: true } });
+  }
+
   public async deleteUser(id: string): Promise<IUser> {
     return userModel.findOneAndDelete({ _id: id });
   }
